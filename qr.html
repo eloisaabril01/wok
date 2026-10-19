@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QR Codes · Wok &amp; Bite</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font:15px system-ui,sans-serif;background:#f6f2ed;color:#17110c;padding:20px}
+.w{max-width:980px;margin:auto}h1{margin:0 0 6px}.m{color:#8a7b6e;margin:0 0 16px}
+.f{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-bottom:12px}@media(max-width:640px){.f{grid-template-columns:1fr}}
+label{font-size:12px;font-weight:700;color:#8a7b6e;display:block;margin-bottom:4px}
+input{width:100%;padding:12px;border:1px solid #e5d8ca;border-radius:12px;font:inherit}
+button{border:0;border-radius:12px;padding:12px 20px;color:#fff;background:linear-gradient(90deg,#ff6b1a,#ff3d54);cursor:pointer;font:inherit;font-weight:700}
+button.g{background:#fff;color:#17110c;border:1px solid #e5d8ca}
+.warn{background:#fff3cd;border:1px solid #ffe08a;border-radius:12px;padding:12px;margin:0 0 14px;display:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:20px}
+.card{background:#fff;border:1px solid #eee4da;border-radius:20px;padding:16px;text-align:center;break-inside:avoid}
+.card h3{margin:0;font-size:20px}.card small{display:block;color:#8a7b6e;margin:2px 0 8px}
+.card .q{display:flex;justify-content:center;padding:8px}
+.card .u{font-size:10px;color:#8a7b6e;word-break:break-all;margin:6px 0}
+.card a{display:inline-block;margin:2px 6px;color:#ff5a14;font-weight:700;font-size:13px;text-decoration:none;cursor:pointer}
+.brand{font-weight:800;color:#ff5a14;margin-bottom:4px}
+@media print{body{background:#fff;padding:0}.no{display:none}.grid{grid-template-columns:repeat(3,1fr);margin:0}.card a,.card .u{display:none}}
+</style></head><body><div class="w">
+<div class="no"><h1>🍜 QR codes for tables</h1>
+<p class="m">Type the exact address where your website is live (the one you open on your phone to see the restaurant app), plus the secret word from the admin panel.</p>
+<div class="warn" id="w"></div>
+<div class="f"><div><label>Your live website address</label><input id="u" placeholder="https://your-restaurant.web.app/" inputmode="url" autocapitalize="off"></div><div><label>Secret word</label><input id="k" placeholder="e.g. wok7391" autocapitalize="off"></div><div><label>Number of tables</label><input id="n" type="number" value="10" min="0" max="100"></div></div>
+<button onclick="mk()">Create QR codes</button> <button class="g" onclick="print()">Print</button>
+<p class="m" style="margin-top:12px">Tip: after creating, click <b>Test link</b> on any card. If the order page opens on your phone/computer, the QR will work too.</p></div>
+<div class="grid" id="g"></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const live=/^https?:$/.test(location.protocol)&&!/^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname);
+$('#u').value=live?location.href.replace(/[?#].*$/,'').replace(/[^\/]*$/,''):(localStorage.qu||'');
+$('#k').value=localStorage.qk||'';
+if(!live){const w=$('#w');w.style.display='block';w.innerHTML='⚠️ You opened this file from your computer. QR codes only work with your <b>live website address</b> (https://…). Type it in the first box below.'}
+function mk(){let b=$('#u').value.trim(),k=$('#k').value.trim(),n=+$('#n').value||0;
+if(!b||!k)return alert('Please type your live website address and the secret word.');
+if(/^(file:|localhost|http:\/\/localhost|http:\/\/127\.|http:\/\/192\.168)/i.test(b))return alert('That address only works on your own computer. Use your live https:// address.');
+if(!/^https?:\/\//i.test(b))b='https://'+b;b=b.replace(/order\.html.*$/,'').replace(/index\.html.*$/,'');if(!b.endsWith('/'))b+='/';
+localStorage.qu=b;localStorage.qk=k;
+const g=$('#g');g.innerHTML='';
+for(let t=0;t<=n;t++){const url=b+'order.html?table='+t+'&k='+encodeURIComponent(k);
+const d=document.createElement('div');d.className='card';
+d.innerHTML=`<div class="brand">Wok &amp; Bite</div><h3>${t?'Table '+t:'Takeaway'}</h3><small>Scan to order</small><div class="q"></div><div class="u">${url}</div><a href="${url}" target="_blank" rel="noopener">Test link</a><a class="dl">Download PNG</a>`;
+g.append(d);new QRCode(d.querySelector('.q'),{text:url,width:180,height:180,correctLevel:QRCode.CorrectLevel.L});
+d.querySelector('.dl').onclick=()=>{const c=d.querySelector('canvas'),a=document.createElement('a');a.download=(t?'table-'+t:'takeaway')+'.png';a.href=c.toDataURL('image/png');a.click()}}}
+</script></body></html>
