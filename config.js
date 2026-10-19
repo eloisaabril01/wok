@@ -1,4 +1,2 @@
-/* Paste your Firebase keys below (Firebase Console > Project settings > Your apps > Web app). Keep the quotes. */
-const FB={apiKey:"PASTE_HERE",authDomain:"PASTE_HERE",projectId:"PASTE_HERE",appId:"PASTE_HERE"};
-/* Owner/admin emails (must match the emails in firestore.rules) */
-const ADMINS=['owner@gmail.com'];
+const FB={apiKey:"AIzaSyCFI9yG0NSycWu7ONq9ogyTL7G4Kdgk-6A",authDomain:"wokk-94f97.firebaseapp.com",projectId:"wokk-94f97",appId:"1:983115998097:web:cd1b67242223dc8a013030"};
+const ADMINS=['navdeepsharma20070@gmail.com'];
