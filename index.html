@@ -196,7 +196,7 @@ const hdr=()=>{$('#st').textContent=navigator.onLine?'● online':'● offline: 
 addEventListener('online',hdr);addEventListener('offline',hdr);hdr();
 let auth,fs,unsubs=[];
 function start(){unsubs.forEach(f=>f());unsubs=[];
-unsubs.push(fs.doc('menu/main').onSnapshot(s=>{if(s.exists){const v=s.data();D.menu=v.menu||D.menu;D.set=Object.assign(D.set,v.set);D.nid=v.nid||D.nid}if(tab=='bill'){gridR();cartR()}else idle()},e=>{note='Sync error: '+e.code}));
+unsubs.push(fs.doc('menu/main').onSnapshot(s=>{if(!s.exists&&admin)save();if(s.exists){const v=s.data();D.menu=v.menu||D.menu;D.set=Object.assign(D.set,v.set);D.nid=v.nid||D.nid}if(tab=='bill'){gridR();cartR()}else idle()},e=>{note='Sync error: '+e.code}));
 const since=Date.now()-30*864e5;
 unsubs.push(fs.collection('orders').where('t','>=',since).orderBy('t','desc').onSnapshot(s=>{D.orders=s.docs.map(d=>d.data()).reverse();if(tab!='bill')idle()},e=>{note='Sync error: '+e.code}));
 first=true;known=new Set();
